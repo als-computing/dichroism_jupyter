@@ -9,8 +9,8 @@ FROM ubuntu:18.04
 #  && rm -rf /var/lib/apt/lists/*
 RUN apt update \
   && apt install -y software-properties-common \
-  && add-apt-repository ppa:deadsnakes/ppa
-RUN apt install -y wget git vim python3.8 python3-pip \
+  && add-apt-repository ppa:deadsnakes/ppa \
+  && apt install -y wget git vim python3.8 python3-pip \
   && rm -rf /var/lib/apt/lists/*
 
 # Need bash for "conda" scripts
