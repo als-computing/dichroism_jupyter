@@ -5,7 +5,9 @@ FROM ubuntu:16.04
 # Install utilities as root user
 RUN apt-get update \
 #  && apt-get install -y --no-install-recommends openssl wget curl git \
-  && apt-get install -y wget git vim python3-pip\
+  && apt-get install -y software-properties-common \
+  && add-apt-repository ppa:deadsnakes/ppa \
+  && apt-get install -y wget git vim python3.8 python3-pip \
   && rm -rf /var/lib/apt/lists/*
 
 # Need bash for "conda" scripts
