@@ -18,18 +18,18 @@ ARG module_name=dxr_env
 ENV MODULE_NAME "$module_name"
 
 # Source directories for this project
-ARG module_src_dir=./"${MODULE_NAME}"
-ARG image_src_dir="${module_src_dir}"/"${PROJECT_NAME}"
+ENV MODULE_SRC_DIR=./"${MODULE_NAME}"
+ENV IMAGE_SRC_DIR="${MODULE_SRC_DIR}"/"${PROJECT_NAME}"
 
 # Install dependencies
-COPY "${image_src_dir}"/requirements.txt /tmp/
+COPY "${IMAGE_SRC_DIR}"/requirements.txt /tmp/
 RUN python -m pip install --upgrade pip  && \
     python -m pip install -r /tmp/requirements.txt
 
 # Install packaged module for versioning
 COPY ./dist /tmp/"${MODULE_NAME}"/dist
 WORKDIR /tmp/"${MODULE_NAME}"/
-COPY "${image_src_dir}"/install_proj_pkgs.sh ./
+COPY "${IMAGE_SRC_DIR}"/install_proj_pkgs.sh ./
 RUN chmod u+x ./install_proj_pkgs.sh && ./install_proj_pkgs.sh
 
 # Create a non-root user
@@ -48,7 +48,7 @@ RUN adduser --disabled-password \
   $USER
 
 # Copy files as root, configure for container user
-COPY "${image_src_dir}"/*.sh /usr/local/bin/"${PROJECT_NAME}"/
+COPY "${IMAGE_SRC_DIR}"/*.sh /usr/local/bin/"${PROJECT_NAME}"/
 RUN chown $UID:$GID /usr/local/bin/"${PROJECT_NAME}"/*.sh && \
     chmod u+x /usr/local/bin/"${PROJECT_NAME}"/*.sh && \
     ln -s /usr/local/bin/"${PROJECT_NAME}"/*.sh /usr/local/bin/
@@ -90,9 +90,12 @@ RUN mkdir $PROJECT_DIR
 WORKDIR $PROJECT_DIR
 
 # Install docker image files
-COPY "${image_src_dir}"/*.py "${image_src_dir}"/*.pem \
-    "${image_src_dir}"/*.yml "${PROJECT_DIR}"/
+COPY "${IMAGE_SRC_DIR}"/*.py "${IMAGE_SRC_DIR}"/*.pem \
+    "${IMAGE_SRC_DIR}"/*.yml "${PROJECT_DIR}"/
 WORKDIR "${PROJECT_DIR}"
+
+# Remove build-time ENV variables
+RUN unset IMAGE_SRC_DIR MODULE_SRC_DIR
 
 # Update the base conda environment
 ENV CONDA_REMOVE_PKGS --force-pkgs-dirs
