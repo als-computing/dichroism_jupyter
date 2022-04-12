@@ -5,7 +5,7 @@ FROM ubuntu:16.04
 # Install utilities as root user
 RUN apt-get update \
 #  && apt-get install -y --no-install-recommends openssl wget curl git \
-  && apt-get install -y wget git vim python-pip\
+  && apt-get install -y wget git vim python3-pip\
   && rm -rf /var/lib/apt/lists/*
 
 # Need bash for "conda" scripts
@@ -27,8 +27,8 @@ ENV IMAGE_SRC_DIR="${MODULE_SRC_DIR}"/"${PROJECT_NAME}"
 COPY "${IMAGE_SRC_DIR}"/requirements.txt /tmp/
 # RUN python -m pip install --upgrade pip setuptools  && \
 #     python -m pip install -r /tmp/requirements.txt
-RUN pip install --upgrade pip setuptools  && \
-    pip install -r /tmp/requirements.txt
+RUN pip3 install --upgrade pip setuptools  && \
+    pip3 install -r /tmp/requirements.txt
 
 # Install packaged module for versioning
 COPY ./dist /tmp/"${MODULE_PROJ_NAME}"/dist
