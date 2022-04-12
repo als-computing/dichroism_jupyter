@@ -5,4 +5,4 @@
 
 jupyter labextension install @jupyter-widgets/jupyterlab-manager
 jupyter labextension install jupyter-matplotlib
-python -m ipykernel install --user --name "${ENV_PREFIX}" --display-name "${ENV_NAME}"
+python -m ipykernel install --user --name "${ENV_NAME}" --display-name "${ENV_NAME}"
