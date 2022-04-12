@@ -27,7 +27,7 @@ ENV IMAGE_SRC_DIR="${MODULE_SRC_DIR}"/"${PROJECT_NAME}"
 COPY "${IMAGE_SRC_DIR}"/requirements.txt /tmp/
 # RUN python -m pip install --upgrade pip setuptools  && \
 #     python -m pip install -r /tmp/requirements.txt
-RUN pip3 install --upgrade pip setuptools  && \
+RUN pip3 install --upgrade pip  && \
     pip3 install -r /tmp/requirements.txt
 
 # Install packaged module for versioning
