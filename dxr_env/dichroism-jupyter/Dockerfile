@@ -35,12 +35,6 @@ COPY "${IMAGE_SRC_DIR}"/requirements.txt /tmp/
 RUN pip3 install --upgrade pip  && \
     pip3 install -r /tmp/requirements.txt
 
-# Install packaged module for versioning
-COPY ./dist /tmp/"${MODULE_PROJ_NAME}"/dist
-WORKDIR /tmp/"${MODULE_PROJ_NAME}"/
-COPY "${IMAGE_SRC_DIR}"/install_proj_pkgs.sh ./
-RUN chmod u+x ./install_proj_pkgs.sh && ./install_proj_pkgs.sh
-
 # Create a non-root user
 ARG username=chemla
 ARG uid=1000
@@ -99,7 +93,7 @@ COPY "${IMAGE_SRC_DIR}"/*.py "${IMAGE_SRC_DIR}"/*.pem \
 WORKDIR "${PROJECT_DIR}"
 
 # Remove build-time ENV variables
-RUN unset IMAGE_SRC_DIR MODULE_SRC_DIR MODULE_PROJ_NAME
+RUN unset IMAGE_SRC_DIR MODULE_SRC_DIR
 
 # Update the base conda environment
 ENV CONDA_REMOVE_PKGS --force-pkgs-dirs
@@ -118,11 +112,20 @@ RUN conda env create --prefix $ENV_PREFIX --file "${ENV_NAME}".env.yml --force &
 # run the postBuild script to install any JupyterLab extensions
 RUN conda activate $ENV_PREFIX && \
     /usr/local/bin/postBuild.sh && \
+    conda deactivate
+
+# Install packaged module for versioning
+COPY ./dist ./tmp/dist
+RUN conda activate $ENV_PREFIX && \
+    /usr/local/bin/install_proj_pkgs.sh && \
     conda deactivate && \
     unset ENV_NAME ENV_PREFIX
 
 # END REPEAT for each environment
 #---------------------------------------
+
+# Remove build-time ENV variables
+RUN unset MODULE_PROJ_NAME
 
 # Activate the project conda environment at shell startup
 ARG default_env_name=dbc_fastapi
