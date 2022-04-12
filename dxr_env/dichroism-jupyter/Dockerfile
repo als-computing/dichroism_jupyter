@@ -1,6 +1,7 @@
 # syntax = docker/dockerfile:1.2
 
-FROM ubuntu:16.04
+# FROM ubuntu:16.04
+FROM ubuntu:18.04
 
 # Install utilities as root user
 # RUN apt update \
