@@ -112,18 +112,31 @@ RUN conda env create --prefix $ENV_PREFIX --file "${ENV_NAME}".env.yml --force &
 # run the postBuild script to install any JupyterLab extensions
 RUN conda activate $ENV_PREFIX && \
     /usr/local/bin/postBuild.sh && \
-    conda deactivate
-
-# Install packaged module for versioning
-COPY ./dist ./tmp/dist
-RUN conda activate $ENV_PREFIX && \
-    /usr/local/bin/install_proj_pkgs.sh && \
     conda deactivate && \
     unset ENV_NAME ENV_PREFIX
 
 # END REPEAT for each environment
 #---------------------------------------
 
+# Include packaged module for versioning
+COPY ./dist ./tmp/dist
+
+#=======================================
+# REPEAT this block for each environment
+
+# Install packaged module for versioning
+ENV ENV_NAME=dbc_fastapi
+ENV ENV_PREFIX $PROJECT_DIR/envs/"${ENV_NAME}"
+RUN conda activate $ENV_PREFIX && \
+    /usr/local/bin/install_proj_pkgs.sh && \
+    conda deactivate && \
+    unset ENV_NAME ENV_PREFIX
+
+# END REPEAT for each environment
+#=======================================
+
+# Cleanup after installation
+RUN rm -rf ./tmp/dist
 # Remove build-time ENV variables
 RUN unset MODULE_PROJ_NAME
 
