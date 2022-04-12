@@ -1,0 +1,82 @@
+version: '3.4'
+# version: '3.1'
+
+services:
+
+  dichroism-jupyter:
+    build: 
+      context: ${DXR_JUP_SRC_DIR}/
+      args:
+        - username=${DXR_JUP_USER}
+        - uid=${DXR_JUP_UID}
+        - gid=${DXR_JUP_GID}
+      network: dichroism-jupyter-frontend
+    # image: dichroism-jupyter:latest
+    image: registry.nersc.gov/als/dichroism-jupyter:latest
+    container_name: dichroism-jupyter
+    restart: always
+    environment:
+      - TZ=America/Los_Angeles
+    networks:
+      - dichroism-jupyter-frontend
+      - backend
+    ports:
+      - "${DXR_JUP_HOST_PORT}:8888"
+    # volumes:
+#    init: true
+    stdin_open: true
+    tty: true
+    depends_on:
+      # - mongo
+      - build-networks
+#          condition: service_healthy
+
+  dichroism-jupyter-testing:
+    build: 
+      context: ${DXR_JUP_SRC_DIR}/
+      args:
+        - username=${DXR_JUP_USER}
+        - uid=${DXR_JUP_UID}
+        - gid=${DXR_JUP_GID}
+      network: dichroism-jupyter-testing-frontend
+    # image: dichroism-jupyter:testing
+    image: registry.nersc.gov/als/dichroism-jupyter:testing
+    container_name: dichroism-jupyter-testing
+    restart: always
+    environment:
+      - TZ=America/Los_Angeles
+    networks:
+      - dichroism-jupyter-testing-frontend
+      - backend
+    ports:
+      - "${DXR_JUP_TEST_HOST_PORT}:8888"
+    # volumes:
+#    init: true
+    stdin_open: true
+    tty: true
+    depends_on:
+      # - mongo
+      - build-networks
+#          condition: service_healthy
+
+  build-networks:
+    build: 
+      context: ./build-networks/
+      network: none
+    image: build-networks/0.0.0
+    restart: "no"
+    container_name: build-networks
+    networks:
+      - dichroism-jupyter-frontend
+      - dichroism-jupyter-testing-frontend
+      - backend
+
+networks:
+  dichroism-jupyter-frontend: {}
+  dichroism-jupyter-testing-frontend: {}
+  # mongo-express-frontend: {}
+  backend: {}
+
+# volumes:
+#   mongo-data:
+#     # name: "mongo-data"
