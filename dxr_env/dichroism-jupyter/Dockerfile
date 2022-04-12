@@ -13,9 +13,11 @@ SHELL [ "/bin/bash", "--login", "-c" ]
 
 # Name of this project and its packaged module
 ARG project_name=dichroism-jupyter
-ENV PROJECT_NAME "$project_name"
+ENV PROJECT_NAME "${project_name}"
 ARG module_name=dxr_env
-ENV MODULE_NAME "$module_name"
+ENV MODULE_NAME "${module_name}"
+ARG module_proj_name=dichroism_jupyter
+ENV MODULE_PROJ_NAME "${module_proj_name}"
 
 # Source directories for this project
 ENV MODULE_SRC_DIR=./"${MODULE_NAME}"
@@ -27,8 +29,8 @@ ENV IMAGE_SRC_DIR="${MODULE_SRC_DIR}"/"${PROJECT_NAME}"
 #     python -m pip install -r /tmp/requirements.txt
 
 # Install packaged module for versioning
-COPY ./dist /tmp/"${MODULE_NAME}"/dist
-WORKDIR /tmp/"${MODULE_NAME}"/
+COPY ./dist /tmp/"${MODULE_PROJ_NAME}"/dist
+WORKDIR /tmp/"${MODULE_PROJ_NAME}"/
 COPY "${IMAGE_SRC_DIR}"/install_proj_pkgs.sh ./
 RUN chmod u+x ./install_proj_pkgs.sh && ./install_proj_pkgs.sh
 
@@ -90,7 +92,7 @@ COPY "${IMAGE_SRC_DIR}"/*.py "${IMAGE_SRC_DIR}"/*.pem \
 WORKDIR "${PROJECT_DIR}"
 
 # Remove build-time ENV variables
-RUN unset IMAGE_SRC_DIR MODULE_SRC_DIR
+RUN unset IMAGE_SRC_DIR MODULE_SRC_DIR MODULE_PROJ_NAME
 
 # Update the base conda environment
 ENV CONDA_REMOVE_PKGS --force-pkgs-dirs
