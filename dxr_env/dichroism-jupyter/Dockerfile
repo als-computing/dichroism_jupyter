@@ -88,8 +88,9 @@ RUN mkdir $PROJECT_DIR
 WORKDIR $PROJECT_DIR
 
 # Install docker image files
-COPY "${IMAGE_SRC_DIR}"/*.py "${IMAGE_SRC_DIR}"/*.pem \
-    "${IMAGE_SRC_DIR}"/*.yml "${PROJECT_DIR}"/
+COPY --chown=$UID:$GID \
+  "${IMAGE_SRC_DIR}"/*.py "${IMAGE_SRC_DIR}"/*.pem \
+  "${IMAGE_SRC_DIR}"/*.yml "${PROJECT_DIR}"/
 WORKDIR "${PROJECT_DIR}"
 
 # Remove build-time ENV variables
@@ -119,7 +120,7 @@ RUN conda activate $ENV_PREFIX && \
 #---------------------------------------
 
 # Include packaged module for versioning
-COPY ./dist ./tmp/dist
+COPY --chown=$UID:$GID ./dist ./tmp/dist
 
 #=======================================
 # REPEAT this block for each environment
