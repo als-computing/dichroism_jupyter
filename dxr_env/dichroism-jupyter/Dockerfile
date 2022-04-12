@@ -53,11 +53,6 @@ RUN chown $UID:$GID /usr/local/bin/"${PROJECT_NAME}"/*.sh && \
     chmod u+x /usr/local/bin/"${PROJECT_NAME}"/*.sh && \
     ln -s /usr/local/bin/"${PROJECT_NAME}"/*.sh /usr/local/bin/
 
-
-COPY entrypoint.sh /usr/local/bin/
-RUN chown $UID:$GID /usr/local/bin/entrypoint.sh && \
-    chmod u+x /usr/local/bin/entrypoint.sh
-
 # Install utilities as root user
 RUN apt-get update \
 #  && apt-get install -y --no-install-recommends openssl wget curl git \
