@@ -13,6 +13,7 @@ python setup.py sdist
 run_container=
 build_args=
 docker_compose=
+run_args=
 
 while [[ $# -gt 0 ]] 
 do
@@ -23,6 +24,8 @@ do
             ;;
         # --no-cache) echo "--no-cache"
         #     ;;
+        DEFAULT_ENV_NAME*) run_args="${run_args} --env $1"
+            ;;
         --*) build_args="${build_args} $1"
             ;;
         *) build_args="${build_args} $1"
@@ -31,6 +34,7 @@ do
     shift
 done
 echo Using extra build_args: ${build_args}
+echo Using extra run_args:   ${run_args}
 
 PROJ_VERSION=$(python ./dxr_env/version_id.py)
 TAG_NAME=latest
@@ -78,6 +82,6 @@ fi
 HOST_PORT=8889
 
 docker run -it --rm \
-  # --env DEFAULT_ENV_NAME=dbc_fastapi \
+  ${run_args} \
   -p 0.0.0.0:${HOST_PORT}:8888/tcp \
   ${IMAGE_NAME}:${TAG_NAME} /bin/bash
