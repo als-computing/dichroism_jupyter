@@ -15,5 +15,5 @@ Install from a local directory or a sdist tarball.
 python -m pip install .
 
 # Local tarball, uses static version file generated during build
-python -m pip install dxr_env-0.0.0.tar.gz
+python -m pip install dxr_env-0.1.0.tar.gz
 ```
