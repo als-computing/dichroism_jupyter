@@ -5,13 +5,9 @@ FROM ubuntu:18.04
 
 # Install utilities as root user
 RUN apt-get update \
- && apt-get install -y --no-install-recommends openssl wget curl git \
- && rm -rf /var/lib/apt/lists/*
-# RUN apt-get update \
-#   && apt-get install -y software-properties-common \
-#   && add-apt-repository ppa:deadsnakes/ppa \
-#   && apt-get install -y wget git vim python3.8 python3-pip \
-#   && rm -rf /var/lib/apt/lists/*
+#  && apt-get install -y --no-install-recommends openssl wget curl git \
+  && apt-get install -y wget git vim \
+  && rm -rf /var/lib/apt/lists/*
 
 # Need bash for "conda" scripts
 SHELL [ "/bin/bash", "--login", "-c" ]
@@ -48,12 +44,6 @@ COPY "${IMAGE_SRC_DIR}"/*.sh /usr/local/bin/"${PROJECT_NAME}"/
 RUN chown $UID:$GID /usr/local/bin/"${PROJECT_NAME}"/*.sh && \
     chmod u+x /usr/local/bin/"${PROJECT_NAME}"/*.sh && \
     ln -s /usr/local/bin/"${PROJECT_NAME}"/*.sh /usr/local/bin/
-
-# Install utilities as root user
-RUN apt-get update \
-#  && apt-get install -y --no-install-recommends openssl wget curl git \
-  && apt-get install -y wget git vim \
-  && rm -rf /var/lib/apt/lists/*
 
 # Install Miniconda as the non-root user
 USER $USER
