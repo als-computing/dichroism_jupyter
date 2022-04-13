@@ -4,14 +4,14 @@
 FROM ubuntu:18.04
 
 # Install utilities as root user
-# RUN apt-get update \
-#  && apt-get install -y --no-install-recommends openssl wget curl git \
-#  && rm -rf /var/lib/apt/lists/*
 RUN apt-get update \
-  && apt-get install -y software-properties-common \
-  && add-apt-repository ppa:deadsnakes/ppa \
-  && apt-get install -y wget git vim python3.8 python3-pip \
-  && rm -rf /var/lib/apt/lists/*
+ && apt-get install -y --no-install-recommends openssl wget curl git \
+ && rm -rf /var/lib/apt/lists/*
+# RUN apt-get update \
+#   && apt-get install -y software-properties-common \
+#   && add-apt-repository ppa:deadsnakes/ppa \
+#   && apt-get install -y wget git vim python3.8 python3-pip \
+#   && rm -rf /var/lib/apt/lists/*
 
 # Need bash for "conda" scripts
 SHELL [ "/bin/bash", "--login", "-c" ]
@@ -27,13 +27,6 @@ ENV MODULE_PROJ_NAME "${module_proj_name}"
 # Source directories for this project
 ENV MODULE_SRC_DIR=./"${MODULE_NAME}"
 ENV IMAGE_SRC_DIR="${MODULE_SRC_DIR}"/"${PROJECT_NAME}"
-
-# Install dependencies
-COPY "${IMAGE_SRC_DIR}"/requirements.txt /tmp/
-# RUN python -m pip install --upgrade pip setuptools  && \
-#     python -m pip install -r /tmp/requirements.txt
-RUN pip3 install --upgrade pip  && \
-    pip3 install -r /tmp/requirements.txt
 
 # Create a non-root user
 ARG username=chemla
@@ -59,7 +52,7 @@ RUN chown $UID:$GID /usr/local/bin/"${PROJECT_NAME}"/*.sh && \
 # Install utilities as root user
 RUN apt-get update \
 #  && apt-get install -y --no-install-recommends openssl wget curl git \
-  && apt-get install -y wget git vim\
+  && apt-get install -y wget git vim \
   && rm -rf /var/lib/apt/lists/*
 
 # Install Miniconda as the non-root user
