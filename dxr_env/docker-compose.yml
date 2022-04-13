@@ -10,7 +10,7 @@ services:
         - username=${DXR_JUP_USER}
         - uid=${DXR_JUP_UID}
         - gid=${DXR_JUP_GID}
-      network: dichroism-jupyter-frontend
+      network: docker_dichroism-jupyter-frontend
     # image: dichroism-jupyter:latest
     image: registry.nersc.gov/als/dichroism-jupyter:latest
     container_name: dichroism-jupyter
@@ -38,7 +38,7 @@ services:
         - username=${DXR_JUP_USER}
         - uid=${DXR_JUP_UID}
         - gid=${DXR_JUP_GID}
-      network: dichroism-jupyter-testing-frontend
+      network: docker_dichroism-jupyter-testing-frontend
     # image: dichroism-jupyter:testing
     image: registry.nersc.gov/als/dichroism-jupyter:testing
     container_name: dichroism-jupyter-testing
